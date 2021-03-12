@@ -69,12 +69,17 @@ public class HmsPushMessageService extends HmsMessageService {
                 if (preFunction != null) {
                     preFunction = preFunction.replace("=>", "");
                 }
+                Log.w(TAG, "** preFunction ** " + preFunction);
                 String function = String.format(Locale.ENGLISH, "function callback%s", preFunction);
+                Log.w(TAG, "** function ** " + function);
                 String s = "[\"HmsLocalNotification\"].backgroundLocalNotification";
+                Log.w(TAG, "** s ** " + s);
                 StringBuilder newFunction = new StringBuilder();
                 if (function.contains("ionic")) {
+                    Log.w(TAG, "** ionic ** ");
                     final String[] lines = function.split("\n");
                     for (final String line : lines) {
+                        Log.w(TAG, "** line ** " + line);
                         if (line.contains(s)) {
                             final int start = line.indexOf("(");
                             final int end = line.indexOf(";");
@@ -87,10 +92,13 @@ public class HmsPushMessageService extends HmsMessageService {
                         }
                     }
                     function = newFunction.toString();
+                    Log.w(TAG, "** function = newFunction.toString() ** " + function);
                 }
                 webView.evaluateJavascript(function, null);
+                Log.w(TAG, "** evaluateJavascript#2 param ** " + String.format(Locale.ENGLISH, "callback(%s);", RemoteMessageUtils.fromMap(message)));
                 webView.evaluateJavascript(
                     String.format(Locale.ENGLISH, "callback(%s);", RemoteMessageUtils.fromMap(message)), null);
+                Log.w(TAG, "** end ** ");
             }
         } catch (final JSONException e) {
             Log.w(TAG, "onMessageReceived: " + e.getLocalizedMessage());
